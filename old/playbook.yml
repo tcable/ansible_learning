@@ -1,0 +1,18 @@
+---
+- hosts: webservers
+  remote_user: tc
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: ping servers
+    ping:
+    remote_user: tc
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  - name: get o2.co.uk
+    get_url: url=http://www.o2.co.uk dest=/home/tc/foo.conf
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted

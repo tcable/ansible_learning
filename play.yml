@@ -1,0 +1,11 @@
+---
+# This playbook deploys apache and sets the default page
+
+- hosts: all
+  remote_user: tc
+  become: yes
+  become_method: sudo
+
+  roles:
+    - setup
+    - content

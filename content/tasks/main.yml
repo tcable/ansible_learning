@@ -1,0 +1,4 @@
+---
+
+- name: place html file on server
+  copy: dest=/var/www/html/index.html src="{{ html_file }}"

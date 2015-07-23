@@ -1,0 +1,21 @@
+---
+- hosts: web1:web2
+  remote_user: tc
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: stop and disable iptables
+    service: name=iptables state=stopped enabled=no
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  - name: empty apache welcome.conf file
+    copy: dest=/etc/httpd/conf.d/welcome.conf content=#
+    notify:
+      - reload apache
+  - name: place html file on server
+    copy: dest=/var/www/html/index.html src="{{ html_file }}"
+  handlers:
+    - name: reload apache
+      service: name=httpd state=reloaded

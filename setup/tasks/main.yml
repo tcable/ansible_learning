@@ -1,0 +1,14 @@
+---
+
+- name: stop and disable iptables
+  service: name=iptables state=stopped enabled=no
+
+- name: ensure apache is at the latest version
+  yum: pkg=httpd state=latest
+
+- name: ensure apache is running (and enable it at boot)
+  service: name=httpd state=started enabled=yes
+
+- name: empty apache welcome.conf file
+  copy: dest=/etc/httpd/conf.d/welcome.conf content=#
+  notify: reload apache
